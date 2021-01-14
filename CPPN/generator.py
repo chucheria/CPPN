@@ -4,11 +4,12 @@ import numpy as np
 class Generator():
 
     def __init__(self, pattern, **kwargs):
+        self.patterns = {}
         self.__dict__.update((key, value) for key, value in kwargs.items())
-        self.patterns = defaultdict(self._generate_input(pattern))
-        self.patterns['sin'] = self._generate_sin_input()
-        self.patterns['square'] = self._generate_square_input()
-        self.patterns['circular'] = self._generate_circular_input()
+        self.patterns = defaultdict(self._generate_input)
+        self.patterns['sin'] = self._generate_sin_input
+        self.patterns['square'] = self._generate_square_input
+        self.patterns['circular'] = self._generate_circular_input
 
     def _generate_circular_input(self):
         x = np.arange(0, self.size_x, 1)
@@ -54,7 +55,6 @@ class Generator():
                 # colors[i][j] = np.array(np.sin(i), np.cos(j))
                 # colors[i][j] = np.random.normal(float(i) / size_y, float(j) / size_x, size=(1, 2))
         return colors.reshape(self.size_x * self.size_y, 2)
-
 
     def generate(self, pattern):
         return self.patterns[pattern]()
