@@ -31,15 +31,20 @@ class NN(nn.Module):
     def forward(self, x):
         return self.layers(x)
 
+    @property
     def optimizer(self):
-        return torch.optim.SGD(self.layers.parameters(), lr=0.1, momentum=0.9)
- 
+        _opt = torch.optim.SGD(self.layers.parameters(), lr=0.1, momentum=0.9)
+        _opt.zero_grad()
+        return _opt
+    
+    @property
+    def loss(self):
+        return torch.mean
+    
     def train(self, x, n_steps=10, callback=lambda x: None):
 
-        loss = torch.mean
-        opt = self.optimizer()
-        opt.zero_grad()
         self.apply(self._init)
+        opt = self.optimizer
 
         for _ in range(n_steps):
 
