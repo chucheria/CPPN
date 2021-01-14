@@ -1,9 +1,10 @@
 import numpy as np
+from collections import defaultdict
 
 
-class Generator():
+class Generator:
 
-    def __init__(self, pattern, **kwargs):
+    def __init__(self, **kwargs):
         self.patterns = {}
         self.__dict__.update((key, value) for key, value in kwargs.items())
         self.patterns = defaultdict(self._generate_input)
@@ -55,6 +56,3 @@ class Generator():
                 # colors[i][j] = np.array(np.sin(i), np.cos(j))
                 # colors[i][j] = np.random.normal(float(i) / size_y, float(j) / size_x, size=(1, 2))
         return colors.reshape(self.size_x * self.size_y, 2)
-
-    def generate(self, pattern):
-        return self.patterns[pattern]()

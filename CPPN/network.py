@@ -1,10 +1,8 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import colors
-from collections import defaultdict
 
 
 def plot_image(colors, fig_size=6):
@@ -15,6 +13,10 @@ def plot_image(colors, fig_size=6):
 def plot_callback(net, input, size_x, size_y, output_size=3):
     img = net(torch.tensor(input).type(torch.FloatTensor)).detach().numpy()
     return img.reshape(size_x, size_y, output_size)
+
+
+def save(colors, name):
+    plt.imsave(f"images/{name}.png", colors)
 
 
 class NN(nn.Module):
@@ -32,7 +34,7 @@ class NN(nn.Module):
         layers += [activation()]
 
         for _ in range(n_layers - 1):
-            layers += [nn.Linear(n_neurons, n_layers, bias=False)]
+            layers += [nn.Linear(n_neurons, n_neurons, bias=False)]
             layers += [activation()]
 
         layers += [nn.Linear(n_neurons, output_size, bias=False), nn.Sigmoid()]
