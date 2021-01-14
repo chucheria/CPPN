@@ -55,11 +55,12 @@ class NN(nn.Module):
 class Generator():
 
     def __init__(self, pattern, **kwargs):
+        self.patterns = {}
         self.__dict__.update((key, value) for key, value in kwargs.items())
-        self.patterns = defaultdict(self._generate_input(pattern))
-        self.patterns['sin'] = self._generate_sin_input()
-        self.patterns['square'] = self._generate_square_input()
-        self.patterns['circular'] = self._generate_circular_input()
+        self.patterns = defaultdict(self._generate_input)
+        self.patterns['sin'] = self._generate_sin_input
+        self.patterns['square'] = self._generate_square_input
+        self.patterns['circular'] = self._generate_circular_input
 
     def _generate_circular_input(self):
         x = np.arange(0, self.size_x, 1)
@@ -118,3 +119,7 @@ def plot_image(colors, fig_size=6):
 def plot_callback(net, input, size_x, size_y, output_size=3):
     img = net(torch.tensor(input).type(torch.FloatTensor)).detach().numpy()
     return img.reshape(size_x, size_y, output_size)
+
+
+def save(colors, name):
+    plt.imsave(f"images/{name}.png", colors)
