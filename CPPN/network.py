@@ -27,10 +27,8 @@ class NN(nn.Module):
 
         layers += [nn.Linear(n_neurons, output_size, bias=False), nn.Sigmoid()]
         self.layers = nn.Sequential(*layers)
-
-    def forward(self, x):
-        return self.layers(x)
-
+        self.apply(self._init)
+        
     @property
     def optimizer(self):
         _opt = torch.optim.SGD(self.layers.parameters(), lr=0.1, momentum=0.9)
@@ -41,6 +39,9 @@ class NN(nn.Module):
     def loss(self):
         return torch.mean
     
+    def forward(self, x):
+        return self.layers(x)
+
     def train(self, x, n_steps=10, callback=lambda x: None):
 
         self.apply(self._init)
