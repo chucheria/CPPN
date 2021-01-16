@@ -66,5 +66,7 @@ class NN(nn.Module):
             img = self.layers(torch.tensor(x).type(torch.FloatTensor))
             loss = self.loss(img)
 
+            callback(img)
+
             loss.backward()
             opt.step()
