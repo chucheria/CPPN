@@ -4,9 +4,12 @@ from collections import defaultdict
 
 class Generator:
 
-    def __init__(self, **kwargs):
+    def __init__(self, size_x, size_y, scale):
+        self.size_x = size_x
+        self.size_y = size_y
+        self.scale = scale
+
         self.patterns = {}
-        self.__dict__.update((key, value) for key, value in kwargs.items())
         self.patterns = defaultdict(self._generate_input)
         self.patterns['sin'] = self._generate_sin_input
         self.patterns['square'] = self._generate_square_input
@@ -32,8 +35,8 @@ class Generator:
         colors = np.zeros((self.size_x, self.size_y, 2))
         for i in x:
             for j in y:
-                colors[i][j] = np.array([abs(max([i, j]) / self.size_x - self.offset),
-                                         abs(max([i, j]) / self.size_y - self.offset)])
+                colors[i][j] = np.array([abs(max([i, j]) / self.size_x - self.scale),
+                                         abs(max([i, j]) / self.size_y - self.scale)])
         return colors.reshape(self.size_x * self.size_y, 2)
 
     def _generate_sin_input(self):
@@ -42,7 +45,7 @@ class Generator:
         colors = np.zeros((self.size_x, self.size_y, 2))
         for i in x:
             for j in y:
-                colors[i][j] = np.array([np.sin(i * self.width) * self.size_x, j])
+                colors[i][j] = np.array([np.sin(i * self.scale) * self.size_x, j])
         return colors.reshape(self.size_x * self.size_y, 2)
 
     def _generate_input(self):
