@@ -8,6 +8,7 @@ from matplotlib import colors
 def plot_image(colors, fig_size=6):
     plt.figure(figsize=(fig_size, fig_size))
     plt.imshow(colors, interpolation='nearest', vmin=0, vmax=1)
+    plt.show()
 
 
 def plot_callback(net, input, size_x, size_y, output_size=3):
@@ -49,13 +50,14 @@ class NN(nn.Module):
     
     @property
     def loss(self):
-        return torch.mean
+        def _loss(img):
+            return torch.mean(1-torch.amin(img, dim=(0, 1))/torch.amax(img, dim=(0, 1)))
+        return _loss
     
     def forward(self, x):
         return self.layers(x)
 
     def train(self, x, n_steps=10, callback=lambda x: None):
-
         self.apply(self._init)
         opt = self.optimizer
 
@@ -63,8 +65,6 @@ class NN(nn.Module):
 
             img = self.layers(torch.tensor(x).type(torch.FloatTensor))
             loss = self.loss(img)
-    
-            callback(img)
 
             loss.backward()
             opt.step()
