@@ -60,3 +60,10 @@ class ColorFactory:
 
     def generate(self, pattern, **kwargs):
         return self.patterns[pattern](**kwargs)
+
+    
+if __name__=="__main__":
+    
+    color_factory = ColorFactory()
+    square_input = color_factory.generate(pattern="square",size_x=256,size_y=256, offset=0)
+    circle_input = color_factory.generate(pattern="circle",size_x=256,size_y=256, scale=0.5)
