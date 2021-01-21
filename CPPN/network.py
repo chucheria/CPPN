@@ -51,7 +51,7 @@ class NN(nn.Module):
     @property
     def loss(self):
         def _loss(img):
-            return torch.mean(1-torch.amin(img, dim=(0, 1))/torch.amax(img, dim=(0, 1)))
+            return torch.abs(1 - torch.var(img))
         return _loss
     
     def forward(self, x):
@@ -63,10 +63,11 @@ class NN(nn.Module):
 
         for _ in range(n_steps):
 
-            img = self.layers(torch.tensor(x).type(torch.FloatTensor))
+            tens = torch.tensor(x).type(torch.FloatTensor)
+            img = self.layers(tens)
             loss = self.loss(img)
-
             callback(img)
 
             loss.backward()
+            print(loss)
             opt.step()

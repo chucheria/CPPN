@@ -7,6 +7,7 @@ class Generator:
     def __init__(self, size_x, size_y, scale):
         self.size_x = size_x
         self.size_y = size_y
+        self.size_z = 32
         self.scale = scale
 
         self.patterns = {}
@@ -14,22 +15,6 @@ class Generator:
         self.patterns['sin'] = self._generate_sin_input
         self.patterns['square'] = self._generate_square_input
         self.patterns['circular'] = self._generate_circular_input
-        self.patterns['latent'] = self._generate_latent_space
-
-    def _generate_latent_space(self):
-        x = np.arange(0, self.size_x, 1)
-        y = np.arange(0, self.size_y, 1)
-        colors = np.zeros((self.size_x, self.size_y, 4))
-        for i in x:
-            for j in y:
-                colors[i][j] = np.array([
-                    float(i) / self.size_y - self.scale,
-                    float(j) / self.size_y - self.scale,
-                    np.sqrt(((i * self.scale - (self.size_x * self.scale / 2)) ** 2) +
-                            ((j * self.scale - (self.size_y * self.scale / 2)) ** 2)),
-                    2])
-
-        return colors.reshape(self.size_x * self.size_y, 4)
 
     def _generate_circular_input(self):
         x = np.arange(0, self.size_x, 1)
