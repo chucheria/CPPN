@@ -10,9 +10,9 @@ NEURONS = 16
 LAYERS = 9
 ACTIVATION = nn.Tanh
 
-net = NN(n_neurons=NEURONS, n_layers=LAYERS, output_size=OUTPUT_SIZE, activation=ACTIVATION, input_size=3)
+net = NN(n_neurons=NEURONS, n_layers=LAYERS, output_size=OUTPUT_SIZE, activation=ACTIVATION, input_size=4)
 generator = Generator(size_x=SIZE_X, size_y=SIZE_Y, scale=SCALE)
-gen = generator.patterns['circular']()
+gen = generator.patterns['latent']()
 #net.train(gen)
 
 plot_image(plot_callback(net, gen, size_x=SIZE_X, size_y=SIZE_Y, output_size=OUTPUT_SIZE))
