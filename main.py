@@ -1,6 +1,8 @@
-from network import NN, plot_callback, plot_image
-from generator import Generator
+from network import NN, plot_image
+from functools import partial
+from color_factory import ColorFactory
 import torch.nn as nn
+import torch
 
 
 OUTPUT_SIZE = 4
@@ -10,16 +12,29 @@ NEURONS = 16
 LAYERS = 9
 ACTIVATION = nn.Tanh
 
-net = NN(n_neurons=NEURONS, n_layers=LAYERS, output_size=OUTPUT_SIZE, activation=ACTIVATION, input_size=4)
-generator = Generator(size_x=SIZE_X, size_y=SIZE_Y, scale=SCALE)
-gen = generator.patterns['latent']()
-#net.train(gen)
+# Generate patterns
+square_input = ColorFactory().generate(pattern="square", size_x=SIZE_X, size_y=SIZE_X, scale=0)
+circle_input = ColorFactory().generate(pattern="circle", size_x=256, size_y=256, scale=0.5)
 
-plot_image(plot_callback(net, gen, size_x=SIZE_X, size_y=SIZE_Y, output_size=OUTPUT_SIZE))
-#
-# for n in range(0, 11):
-#     print(n)
-#     print('---------')
-#     net.train(gen, n_steps=n)
-#     plot_image(plot_callback(net, gen, size_x=SIZE_X, size_y=SIZE_Y, output_size=OUTPUT_SIZE))
-#
+net = NN(input_size=2, n_neurons=20, n_layers=20, output_size=3)
+
+square_img = net(torch.tensor(square_input).type(torch.FloatTensor))
+circle_img = net(torch.tensor(circle_input).type(torch.FloatTensor))
+
+plot_image(square_img, 256, 256)
+plot_image(circle_img, 256, 256)
+
+# Create target pattern
+target_input = square_img
+target_input[:, 0] = 0.
+target_input[:, 1] = 0.
+
+plot_image(target_input, 256, 256)
+
+# Train training pattern
+callback_plot = partial(plot_image, size_x=256, size_y=256)
+
+source = square_input
+target = target_input.detach().numpy()
+
+net.train(source, target, 20, callback_plot)
