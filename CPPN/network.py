@@ -1,13 +1,9 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
 from color_factory import ColorFactory
-
-
-def save(colors, name):
-    plt.imsave(f"images/{name}.png", colors)
 
 
 def plot_image(colors, size_x, size_y):
@@ -25,6 +21,7 @@ class NN(nn.Module):
             nn.init.normal_(m.weight)
 
     def __init__(self, activation=nn.Tanh, input_size=2, n_neurons=2, n_layers=9, output_size=3):
+        torch.manual_seed(666)
         super(NN, self).__init__()
 
         layers = []
@@ -69,6 +66,7 @@ class NN(nn.Module):
 
         for _ in range(n_steps):
             result = self.forward(torch.tensor(source).type(torch.FloatTensor))
+
             _ = callback(result) if callable(callback) else None
 
             loss = self.loss(result, target)
@@ -77,8 +75,16 @@ class NN(nn.Module):
 
 
 if __name__ == '__main__':
-
     from functools import partial
+
+    SIZE_X = 256
+    SIZE_Y = 256
+    LAYERS = 8
+    NEURONS = 16
+    OUTPUT_SIZE = 3
+
+    factory = ColorFactory()
+    net = NN(input_size=2, n_neurons=NEURONS, n_layers=LAYERS, output_size=OUTPUT_SIZE)
 
     # Generate patterns
     square_input = ColorFactory().generate(pattern="square", size_x=256, size_y=256, scale=0)
