@@ -6,30 +6,37 @@ import matplotlib.pyplot as plt
 from color_factory import ColorFactory
 
 
+FIG_SIZE_X = 8
+FIG_SIZE_Y = 8
+
+
 def plot_image(colors, size_x, size_y):
     img = colors.detach().numpy()
     img = img.reshape(size_x, size_y, 3) * 255
-    plt.figure(figsize=(6, 6))
+
+    plt.figure(figsize=(FIG_SIZE_X, FIG_SIZE_Y))
+    plt.axis('off')
     plt.imshow(img.astype(np.uint8))
     plt.show()
 
 
-def plot_input(colors, size_x,size_y):
+def plot_input(colors, size_x, size_y):
 
     feature_1 = colors[:, 0]
     feature_1 = feature_1 - np.min(feature_1)
-    feature_1 = feature_1*255/np.max(feature_1)
+    feature_1 = feature_1 * 255/np.max(feature_1)
     feature_1 = feature_1.astype(np.uint8).reshape((size_x, size_y))
 
     feature_2 = colors[:, 1]
     feature_2 = feature_2 - np.min(feature_2)
-    feature_2 = feature_2*255/np.max(feature_2)
+    feature_2 = feature_2 * 255/np.max(feature_2)
     feature_2 = feature_2.astype(np.uint8).reshape((size_x, size_y))
 
-    plt.figure(figsize=(6, 6))
+    plt.figure(figsize=(FIG_SIZE_X, FIG_SIZE_Y))
+    plt.axis('off')
     plt.imshow(feature_1, cmap='Greys',)
-
-    plt.figure(figsize=(6, 6))
+    plt.figure(figsize=(FIG_SIZE_X, FIG_SIZE_Y))
+    plt.axis('off')
     plt.imshow(feature_2, cmap='Greys',)
     plt.show()
 
@@ -42,7 +49,8 @@ class NN(nn.Module):
             nn.init.normal_(m.weight)
 
     def __init__(self, activation=nn.Tanh, input_size=2, n_neurons=2, n_layers=9, output_size=3):
-        print(torch.seed())
+        torch.manual_seed(9061450162281048607)
+        print(f'Seed: {torch.seed()}')
         super(NN, self).__init__()
 
         layers = []
