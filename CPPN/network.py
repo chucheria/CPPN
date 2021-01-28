@@ -10,35 +10,34 @@ FIG_SIZE_X = 8
 FIG_SIZE_Y = 8
 
 
-def plot_image(colors, size_x, size_y):
+def plot_image(colors, size_x, size_y, output_size=3, path=None):
     img = colors.detach().numpy()
-    img = img.reshape(size_x, size_y, 3) * 255
+    img = img.reshape(size_x, size_y, output_size) * 255
 
     plt.figure(figsize=(FIG_SIZE_X, FIG_SIZE_Y))
     plt.axis('off')
     plt.imshow(img.astype(np.uint8))
     plt.show()
 
+    if path:
+        plt.imsave(f'{path}.png', img.astype(np.uint8), dpi=300)
 
-def plot_input(colors, size_x, size_y):
 
-    feature_1 = colors[:, 0]
-    feature_1 = feature_1 - np.min(feature_1)
-    feature_1 = feature_1 * 255/np.max(feature_1)
-    feature_1 = feature_1.astype(np.uint8).reshape((size_x, size_y))
+def plot_input(colors, size_x, size_y, path=None):
 
-    feature_2 = colors[:, 1]
-    feature_2 = feature_2 - np.min(feature_2)
-    feature_2 = feature_2 * 255/np.max(feature_2)
-    feature_2 = feature_2.astype(np.uint8).reshape((size_x, size_y))
+    def steps(ft, c, x, y, p):
+        feature = c[:, ft]
+        feature = feature - np.min(feature)
+        feature = feature * 255 / np.max(feature)
+        feature = feature.astype(np.uint8).reshape((x, y))
+        plt.figure(figsize=(FIG_SIZE_X, FIG_SIZE_Y))
+        plt.axis('off')
+        plt.imshow(feature, cmap='Greys')
+        if p:
+            plt.imsave(f'{p}_{ft}.png', feature, cmap='Greys', dpi=300)
 
-    plt.figure(figsize=(FIG_SIZE_X, FIG_SIZE_Y))
-    plt.axis('off')
-    plt.imshow(feature_1, cmap='Greys',)
-    plt.figure(figsize=(FIG_SIZE_X, FIG_SIZE_Y))
-    plt.axis('off')
-    plt.imshow(feature_2, cmap='Greys',)
-    plt.show()
+    steps(0, colors, size_x, size_y, path)
+    steps(1, colors, size_x, size_y, path)
 
 
 class NN(nn.Module):
@@ -49,8 +48,7 @@ class NN(nn.Module):
             nn.init.normal_(m.weight)
 
     def __init__(self, activation=nn.Tanh, input_size=2, n_neurons=2, n_layers=9, output_size=3):
-        torch.manual_seed(9061450162281048607)
-        print(f'Seed: {torch.seed()}')
+        torch.manual_seed(4308271371631272292)
         super(NN, self).__init__()
 
         layers = []
