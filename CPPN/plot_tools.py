@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 import matplotlib.pyplot as plt
-from color_factory import ColorFactory
+
 
 FIG_SIZE_X = 8
 FIG_SIZE_Y = 8
