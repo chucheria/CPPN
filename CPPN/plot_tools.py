@@ -47,7 +47,7 @@ def plot_pattern(pattern, size_x, size_y, path=None):
         plt.axis('off')
         
         img = pattern[:,i]
-        img = 255*img.reshape((256,256))
+        img = 255*img.reshape((size_x,size_y))
 
         plt.imshow(img, cmap='Greys')
         plt.show()
