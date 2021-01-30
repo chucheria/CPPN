@@ -55,9 +55,3 @@ class ColorFactory:
                 colors[i * size_y + j] = self.patterns[pattern](i, j, size_x, size_y, **kwargs)
 
         return colors
-
-
-if __name__ == '__main__':
-    color_factory = ColorFactory()
-    square_input = color_factory.generate(pattern='square', size_x=256, size_y=256, scale=0)
-    circle_input = color_factory.generate(pattern='circle', size_x=256, size_y=256, scale=0.5)
